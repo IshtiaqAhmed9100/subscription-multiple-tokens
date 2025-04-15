@@ -1,0 +1,17 @@
+.DS_Store
+.vscode
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+/out
+/lib
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
