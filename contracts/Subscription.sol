@@ -9,7 +9,6 @@ import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/Reentrancy
 import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 import {TokenRegistry} from "../contracts/TokenRegistry.sol";
-import {Test, console} from "../lib/forge-std/src/Test.sol";
 
 import {ETH, ZeroAddress, ZeroLengthArray, IdenticalValue, ArrayLengthMismatch, InvalidSignature} from "../contracts/utils/Common.sol";
 
@@ -173,7 +172,6 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         }
 
         payable(fundsWallet).sendValue(purchaseAmount);
-
         subEndTimes[msg.sender] = block.timestamp + SUBSCRIPTION_TIME;
 
         emit Subscribed({
@@ -185,9 +183,9 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         });
     }
 
-    /// @notice Purchases the premium subscription with GEMS
-    /// @param token The purchase token
-    /// @param referenceTokenPrice The current price of GEMS in 10 decimals
+    /// @notice Purchases the premium subscription with any allowed token
+    /// @param token The token to purchase subscription
+    /// @param referenceTokenPrice The current price of token in 10 decimals
     /// @param deadline The deadline is validity of the signature
     /// @param referenceNormalizationFactor The normalization factor
     /// @param v The `v` signature parameter
@@ -238,7 +236,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         });
     }
 
-    /// @notice Updates the access of tokens in a given round
+    /// @notice Updates the access of tokens
     /// @param tokens addresses of the tokens
     /// @param accesses The access for the tokens
     function updateAllowedTokens(
@@ -352,10 +350,6 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         blacklistAddress[which] = access;
     }
 
-    function updateSubscriptionTime(uint256 newTime) external onlyOwner {
-        SUBSCRIPTION_TIME = newTime;
-    }
-
     /// @dev Checks zero address, if zero then reverts
     /// @param which The `which` address to check for zero address
     function _checkAddressZero(address which) private pure {
@@ -423,7 +417,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
             });
     }
 
-    /// @dev Validates round, deadline and signature
+    /// @dev Validates purchase
     function _validatePurchase(IERC20 token, uint256 deadline) private view {
         if (!buyEnabled) {
             revert BuyNotEnabled();
@@ -446,6 +440,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         }
     }
 
+    /// @dev Verifies signature with eth
     function _verifyPurchaseWithETH(
         uint256 deadline,
         uint8 v,
@@ -467,6 +462,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         }
     }
 
+    /// @dev Verifies signature with given token
     function _verifyPurchaseWithToken(
         IERC20 token,
         uint256 deadline,
@@ -497,5 +493,9 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         ) {
             revert InvalidSignature();
         }
+    }
+
+    function updateSubscriptionTime(uint256 newTime) external onlyOwner {
+        SUBSCRIPTION_TIME = newTime;
     }
 }
