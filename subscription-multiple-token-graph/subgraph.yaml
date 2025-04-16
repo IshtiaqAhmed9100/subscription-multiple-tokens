@@ -1,0 +1,53 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Subscription
+    network: sepolia
+    source:
+      address: "0xba5503D9742514cAA55F7289303684f992bE7aEC"
+      abi: Subscription
+      startBlock: 8122318
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BlacklistUpdated
+        - BuyEnableUpdated
+        - OwnershipTransferStarted
+        - OwnershipTransferred
+        - SignerUpdated
+        - Subscribed
+        - SubscriptionFeeUpdated
+        - TokenDataAdded
+        - TokensAccessUpdated
+        - fundsWalletUpdated
+      abis:
+        - name: Subscription
+          file: ./abis/Subscription.json
+      eventHandlers:
+        - event: BlacklistUpdated(address,bool)
+          handler: handleBlacklistUpdated
+        - event: BuyEnableUpdated(bool,bool)
+          handler: handleBuyEnableUpdated
+        - event: OwnershipTransferStarted(indexed address,indexed address)
+          handler: handleOwnershipTransferStarted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: SignerUpdated(address,address)
+          handler: handleSignerUpdated
+        - event: Subscribed(address,uint256,indexed address,uint256,indexed uint256)
+          handler: handleSubscribed
+        - event: SubscriptionFeeUpdated(uint256,uint256)
+          handler: handleSubscriptionFeeUpdated
+        - event: TokenDataAdded(address,(address,uint8,uint256))
+          handler: handleTokenDataAdded
+        - event: TokensAccessUpdated(indexed address,indexed bool)
+          handler: handleTokensAccessUpdated
+        - event: fundsWalletUpdated(address,address)
+          handler: handlefundsWalletUpdated
+      file: ./src/subscription.ts
