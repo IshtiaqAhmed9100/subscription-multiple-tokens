@@ -11,8 +11,7 @@ import {ZeroAddress, ArrayLengthMismatch, ZeroLengthArray, IdenticalValue} from 
 /// @notice Implements the price feed of the tokens
 abstract contract TokenRegistry is Ownable2Step {
     /// @member priceFeed The Chainlink price feed address
-    /// @member normalizationFactorForToken The normalization factor to achieve return value of 18 decimals, while calculating presale token purchases and always with different token decimals
-    /// @member normalizationFactorForNFT The normalization factor is the value which helps us to convert decimals of USDT to purchase token decimals and always with different token decimals
+    /// @member normalizationFactorForToken The normalization factor to achieve return value of 6 decimals, while calculating purchases and always with different token decimals
     /// @member tolerance The pricefeed live price should be updated in tolerance time to get better price
     struct PriceFeedData {
         AggregatorV3Interface priceFeed;
