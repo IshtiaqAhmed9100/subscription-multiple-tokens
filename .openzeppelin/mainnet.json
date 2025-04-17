@@ -1,0 +1,271 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x80c162BD592F58ece113404BEfD5Dd24fdF35A49",
+      "txHash": "0x9d240e0120f6bedfdbc406f20ab7a9b9e6328aa0ca94109b59a7adcdef04f4e8",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "293eaf91b01ac53d2575131185c9164ba43ca1456191ff28634a8a2c92f64246": {
+      "address": "0xE6D1065899956Be4fA1E3C5459159c4B8bF77274",
+      "txHash": "0x305399b3dd1db1ed54cec269caf71c1387dd7a28e0b14d96d05beb1cc8798031",
+      "layout": {
+        "solcVersion": "0.8.25",
+        "storage": [
+          {
+            "label": "tokenData",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_contract(IERC20)1491,t_struct(PriceFeedData)7698_storage)",
+            "contract": "TokenRegistry",
+            "src": "contracts/TokenRegistry.sol:23"
+          },
+          {
+            "label": "signerWallet",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:38"
+          },
+          {
+            "label": "fundsWallet",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:41"
+          },
+          {
+            "label": "subscriptionV1",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(ISubscriptionV1)6639",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:44"
+          },
+          {
+            "label": "subscriptionFee",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:47"
+          },
+          {
+            "label": "buyEnabled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:50"
+          },
+          {
+            "label": "blacklistAddress",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:53"
+          },
+          {
+            "label": "subEndTimes",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:56"
+          },
+          {
+            "label": "allowedTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_contract(IERC20)1491,t_bool)",
+            "contract": "Subscription",
+            "src": "contracts/Subscription.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)174_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ownable2StepStorage)59_storage": {
+            "label": "struct Ownable2StepUpgradeable.Ownable2StepStorage",
+            "members": [
+              {
+                "label": "_pendingOwner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)114_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)322_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(AggregatorV3Interface)45": {
+            "label": "contract AggregatorV3Interface",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20)1491": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISubscriptionV1)6639": {
+            "label": "contract ISubscriptionV1",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_contract(IERC20)1491,t_bool)": {
+            "label": "mapping(contract IERC20 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_contract(IERC20)1491,t_struct(PriceFeedData)7698_storage)": {
+            "label": "mapping(contract IERC20 => struct TokenRegistry.PriceFeedData)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(PriceFeedData)7698_storage": {
+            "label": "struct TokenRegistry.PriceFeedData",
+            "members": [
+              {
+                "label": "priceFeed",
+                "type": "t_contract(AggregatorV3Interface)45",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "normalizationFactorForToken",
+                "type": "t_uint8",
+                "offset": 20,
+                "slot": "0"
+              },
+              {
+                "label": "tolerance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable2Step": [
+            {
+              "contract": "Ownable2StepUpgradeable",
+              "label": "_pendingOwner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol:29",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

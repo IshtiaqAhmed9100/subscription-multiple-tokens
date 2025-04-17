@@ -32,7 +32,7 @@ contract Subscription is
     }
 
     /// @dev The constant value helps in calculating subscription time for each index
-    uint256 public SUBSCRIPTION_TIME;
+    uint256 public constant SUBSCRIPTION_TIME = 31536000;
 
     /// @notice The address of the signer wallet
     address public signerWallet;
@@ -40,6 +40,7 @@ contract Subscription is
     /// @notice The address of the funds wallet
     address public fundsWallet;
 
+    /// @notice The address of the subscription V1
     ISubscriptionV1 public subscriptionV1;
 
     /// @notice The subscription fee in USD
@@ -150,15 +151,9 @@ contract Subscription is
         subscriptionV1 = subscriptionV1Address;
         subscriptionFee = subscriptionFeeInit;
         buyEnabled = true;
-        SUBSCRIPTION_TIME = 600;
     }
 
-    function updateSUBSCRIPTION_TIME(
-        uint256 newSUBSCRIPTION_TIME
-    ) external onlyOwner {
-        SUBSCRIPTION_TIME = newSUBSCRIPTION_TIME;
-    }
-
+    /// @notice Returns subscription's endtimes from v1 and v2(this)
     function endTimes(
         address user
     ) external view returns (uint256 endTimeV1, uint256 endTimeV2) {
@@ -221,7 +216,7 @@ contract Subscription is
             tokenPrice: tokenInfo.latestPrice,
             by: msg.sender,
             amountPurchased: purchaseAmount,
-            endTime: subEndTimes[msg.sender]
+            endTime: block.timestamp + SUBSCRIPTION_TIME
         });
     }
 
@@ -287,7 +282,7 @@ contract Subscription is
             tokenPrice: latestPrice,
             by: msg.sender,
             amountPurchased: purchaseAmount,
-            endTime: subEndTimes[msg.sender]
+            endTime: block.timestamp + SUBSCRIPTION_TIME
         });
     }
 

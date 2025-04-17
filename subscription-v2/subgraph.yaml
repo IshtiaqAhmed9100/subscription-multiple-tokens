@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Subscription
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x1EecbA5361e332c4c45c3fA11121BEEA17F4193B"
+      address: "0x80c162BD592F58ece113404BEfD5Dd24fdF35A49"
       abi: Subscription
-      startBlock: 8136761
+      startBlock: 22289476
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
