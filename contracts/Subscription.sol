@@ -27,7 +27,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
     }
 
     /// @dev The constant value helps in calculating subscription time for each index
-    uint256 public SUBSCRIPTION_TIME = 600;
+    uint256 public SUBSCRIPTION_TIME = 31536000;
 
     /// @notice The subscription fee in USD
     uint256 public subscriptionFee;
@@ -149,7 +149,20 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         bytes32 s
     ) external payable nonReentrant {
         _validatePurchase(ETH, deadline);
-        _verifyPurchaseWithETH(deadline, v, r, s);
+
+        if (
+            signerWallet !=
+            ECDSA.recover(
+                MessageHashUtils.toEthSignedMessageHash(
+                    keccak256(abi.encodePacked(msg.sender, deadline, ETH))
+                ),
+                v,
+                r,
+                s
+            )
+        ) {
+            revert InvalidSignature();
+        }
 
         TokenInfo memory tokenInfo = getLatestPrice(ETH);
 
@@ -201,15 +214,28 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         bytes32 s
     ) external nonReentrant {
         _validatePurchase(token, deadline);
-        _verifyPurchaseWithToken(
-            token,
-            deadline,
-            referenceTokenPrice,
-            referenceNormalizationFactor,
-            v,
-            r,
-            s
-        );
+
+        if (
+            signerWallet !=
+            ECDSA.recover(
+                MessageHashUtils.toEthSignedMessageHash(
+                    keccak256(
+                        abi.encodePacked(
+                            msg.sender,
+                            referenceNormalizationFactor,
+                            referenceTokenPrice,
+                            deadline,
+                            token
+                        )
+                    )
+                ),
+                v,
+                r,
+                s
+            )
+        ) {
+            revert InvalidSignature();
+        }
 
         (uint256 latestPrice, uint8 normalizationFactor) = _validatePrice(
             token,
@@ -438,64 +464,5 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         if (subEndTimes[msg.sender] > block.timestamp) {
             revert AlreadySubscribed();
         }
-    }
-
-    /// @dev Verifies signature with eth
-    function _verifyPurchaseWithETH(
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) private view {
-        if (
-            signerWallet !=
-            ECDSA.recover(
-                MessageHashUtils.toEthSignedMessageHash(
-                    keccak256(abi.encodePacked(msg.sender, deadline, ETH))
-                ),
-                v,
-                r,
-                s
-            )
-        ) {
-            revert InvalidSignature();
-        }
-    }
-
-    /// @dev Verifies signature with given token
-    function _verifyPurchaseWithToken(
-        IERC20 token,
-        uint256 deadline,
-        uint256 referenceTokenPrice,
-        uint8 normalizationFactor,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) private view {
-        if (
-            signerWallet !=
-            ECDSA.recover(
-                MessageHashUtils.toEthSignedMessageHash(
-                    keccak256(
-                        abi.encodePacked(
-                            msg.sender,
-                            normalizationFactor,
-                            referenceTokenPrice,
-                            deadline,
-                            token
-                        )
-                    )
-                ),
-                v,
-                r,
-                s
-            )
-        ) {
-            revert InvalidSignature();
-        }
-    }
-
-    function updateSubscriptionTime(uint256 newTime) external onlyOwner {
-        SUBSCRIPTION_TIME = newTime;
     }
 }
