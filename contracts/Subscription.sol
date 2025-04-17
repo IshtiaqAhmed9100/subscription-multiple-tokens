@@ -27,7 +27,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
     }
 
     /// @dev The constant value helps in calculating subscription time for each index
-    uint256 public SUBSCRIPTION_TIME = 3600;
+    uint256 public SUBSCRIPTION_TIME = 600;
 
     /// @notice The subscription fee in USD
     uint256 public subscriptionFee;
@@ -229,7 +229,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
 
         emit Subscribed({
             token: token,
-            tokenPrice: referenceTokenPrice,
+            tokenPrice: latestPrice,
             by: msg.sender,
             amountPurchased: purchaseAmount,
             endTime: subEndTimes[msg.sender]

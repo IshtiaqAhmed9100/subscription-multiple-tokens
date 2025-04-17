@@ -8,9 +8,9 @@ dataSources:
     name: Subscription
     network: sepolia
     source:
-      address: "0xba5503D9742514cAA55F7289303684f992bE7aEC"
+      address: "0x8212B98A16166d59284628824e8314c6634b29D8"
       abi: Subscription
-      startBlock: 8122318
+      startBlock: 8130696
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
