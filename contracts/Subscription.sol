@@ -5,17 +5,22 @@ import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
-import {ReentrancyGuardTransient} from "@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol";
-import {Ownable2Step, Ownable} from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import {TokenRegistry} from "../contracts/TokenRegistry.sol";
+import {ISubscriptionV1} from "./ISubscriptionV1.sol";
 
 import {ETH, ZeroAddress, ZeroLengthArray, IdenticalValue, ArrayLengthMismatch, InvalidSignature} from "../contracts/utils/Common.sol";
 
 /// @title Subscription contract
 /// @notice Implements the functionality of purchasing premium subscription
 /// @notice The subscription contract allows you to get premium subscription using allowed tokens.
-contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
+contract Subscription is
+    ReentrancyGuardUpgradeable,
+    TokenRegistry,
+    UUPSUpgradeable
+{
     using SafeERC20 for IERC20;
     using Address for address payable;
 
@@ -27,10 +32,7 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
     }
 
     /// @dev The constant value helps in calculating subscription time for each index
-    uint256 public SUBSCRIPTION_TIME = 31536000;
-
-    /// @notice The subscription fee in USD
-    uint256 public subscriptionFee;
+    uint256 public SUBSCRIPTION_TIME;
 
     /// @notice The address of the signer wallet
     address public signerWallet;
@@ -38,8 +40,13 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
     /// @notice The address of the funds wallet
     address public fundsWallet;
 
+    ISubscriptionV1 public subscriptionV1;
+
+    /// @notice The subscription fee in USD
+    uint256 public subscriptionFee;
+
     /// @notice That buyEnabled or not
-    bool public buyEnabled = true;
+    bool public buyEnabled;
 
     /// @notice Gives info about address's permission
     mapping(address => bool) public blacklistAddress;
@@ -113,28 +120,50 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
         _;
     }
 
-    /// @dev Constructor
-    /// @param fundsWalletAddress The address of funds wallet
-    /// @param signerAddress The address of signer wallet
-    /// @param owner The address of owner wallet
-    /// @param subscriptionFeeInit The subscription fee in USD
-    constructor(
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
         address fundsWalletAddress,
         address signerAddress,
-        address owner,
+        address initialOwner,
+        ISubscriptionV1 subscriptionV1Address,
         uint256 subscriptionFeeInit
     )
-        Ownable(owner)
+        public
+        initializer
         checkAddressZero(fundsWalletAddress)
         checkAddressZero(signerAddress)
+        checkAddressZero(address(subscriptionV1Address))
     {
         if (subscriptionFeeInit == 0) {
             revert ZeroValue();
         }
 
+        __Ownable_init(initialOwner);
+        __UUPSUpgradeable_init();
+        __ReentrancyGuard_init();
         fundsWallet = fundsWalletAddress;
         signerWallet = signerAddress;
+        subscriptionV1 = subscriptionV1Address;
         subscriptionFee = subscriptionFeeInit;
+        buyEnabled = true;
+        SUBSCRIPTION_TIME = 600;
+    }
+
+    function updateSUBSCRIPTION_TIME(
+        uint256 newSUBSCRIPTION_TIME
+    ) external onlyOwner {
+        SUBSCRIPTION_TIME = newSUBSCRIPTION_TIME;
+    }
+
+    function endTimes(
+        address user
+    ) external view returns (uint256 endTimeV1, uint256 endTimeV2) {
+        endTimeV1 = subscriptionV1.subEndTimes(user);
+        endTimeV2 = subEndTimes[user];
     }
 
     /// @notice Purchases the premium subscription with ETH
@@ -461,8 +490,15 @@ contract Subscription is Ownable2Step, ReentrancyGuardTransient, TokenRegistry {
             revert TokenDisallowed();
         }
 
-        if (subEndTimes[msg.sender] > block.timestamp) {
+        if (
+            block.timestamp < subEndTimes[msg.sender] ||
+            block.timestamp < subscriptionV1.subEndTimes(msg.sender)
+        ) {
             revert AlreadySubscribed();
         }
     }
+
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyOwner {}
 }

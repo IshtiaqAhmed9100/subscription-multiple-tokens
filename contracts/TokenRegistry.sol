@@ -2,14 +2,14 @@
 pragma solidity 0.8.25;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Ownable, Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {Ownable2StepUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 import {ZeroAddress, ArrayLengthMismatch, ZeroLengthArray, IdenticalValue} from "../contracts/utils/Common.sol";
 
 /// @title Tokens Registry contract
 /// @notice Implements the price feed of the tokens
-abstract contract TokenRegistry is Ownable2Step {
+abstract contract TokenRegistry is Ownable2StepUpgradeable {
     /// @member priceFeed The Chainlink price feed address
     /// @member normalizationFactorForToken The normalization factor to achieve return value of 6 decimals, while calculating purchases and always with different token decimals
     /// @member tolerance The pricefeed live price should be updated in tolerance time to get better price
