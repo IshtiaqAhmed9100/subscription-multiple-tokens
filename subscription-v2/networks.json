@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "Subscription": {
+      "address": "0x1EecbA5361e332c4c45c3fA11121BEEA17F4193B",
+      "startBlock": 8136761
+    }
+  }
+}

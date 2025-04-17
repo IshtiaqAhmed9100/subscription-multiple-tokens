@@ -1,0 +1,59 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Subscription
+    network: sepolia
+    source:
+      address: "0x1EecbA5361e332c4c45c3fA11121BEEA17F4193B"
+      abi: Subscription
+      startBlock: 8136761
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BlacklistUpdated
+        - BuyEnableUpdated
+        - Initialized
+        - OwnershipTransferStarted
+        - OwnershipTransferred
+        - SignerUpdated
+        - Subscribed
+        - SubscriptionFeeUpdated
+        - TokenDataAdded
+        - TokensAccessUpdated
+        - Upgraded
+        - fundsWalletUpdated
+      abis:
+        - name: Subscription
+          file: ./abis/Subscription.json
+      eventHandlers:
+        - event: BlacklistUpdated(address,bool)
+          handler: handleBlacklistUpdated
+        - event: BuyEnableUpdated(bool,bool)
+          handler: handleBuyEnableUpdated
+        - event: Initialized(uint64)
+          handler: handleInitialized
+        - event: OwnershipTransferStarted(indexed address,indexed address)
+          handler: handleOwnershipTransferStarted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: SignerUpdated(address,address)
+          handler: handleSignerUpdated
+        - event: Subscribed(address,uint256,indexed address,uint256,indexed uint256)
+          handler: handleSubscribed
+        - event: SubscriptionFeeUpdated(uint256,uint256)
+          handler: handleSubscriptionFeeUpdated
+        - event: TokenDataAdded(address,(address,uint8,uint256))
+          handler: handleTokenDataAdded
+        - event: TokensAccessUpdated(indexed address,indexed bool)
+          handler: handleTokensAccessUpdated
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
+        - event: fundsWalletUpdated(address,address)
+          handler: handlefundsWalletUpdated
+      file: ./src/subscription.ts
